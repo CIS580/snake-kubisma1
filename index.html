@@ -5,6 +5,12 @@
     <link type="text/css" rel="stylesheet" href="snake.css" />
   </head>
   <body>
+    <div id="game-over">
+      <h2>You lose!</h2>
+      <p>Your final score:</p>
+      <p id="final-score">0</p>
+      <button onclick="start()">Restart</button>
+    </div>
     <h1>Play Snake</h1>
     <canvas id="snake" width="760" height="480"></canvas>
     <h2>Instructions</h2>
