@@ -10,12 +10,14 @@ var grid = null;
 var snake = null;
 var score = null;
 var gameOverWindow = document.getElementById('game-over');
+var runtime = 0;
 
 /* Useful constants */
 var CELL_SIZE = 10;
 var EMPTY = " ";
 var SNAKE = "X";
 var APPLE = "A";
+var MIN_TIME = 40;
 
 var NORTH = "N";
 var EAST = "E";
@@ -93,28 +95,47 @@ function Snake() {
     score += 10;
   }
 
+  /* Tells if snake is going in given direction or not */
+  this.isGoing = function(direction) {
+    switch(direction) {
+      case NORTH:
+        if(this.body[0].y - this.body[1].y == 1) return true;
+        break;
+      case EAST:
+        if(this.body[0].x - this.body[1].x == 1) return true;
+        break;
+      case SOUTH:
+        if(this.body[0].y - this.body[1].y == -1) return true;
+        break;
+      case WEST:
+        if(this.body[0].x - this.body[1].x == -1) return true;
+        break;
+    }
+    return false;
+  }
+
   /* Change snake's direction */
   this.changeDirection = function(event) {
     event.preventDefault();
     switch (event.keyCode) {
       case 38:
       case 87:
-        if(this.direction != SOUTH) this.direction = NORTH;
+        if(this.direction != SOUTH && !this.isGoing(SOUTH)) this.direction = NORTH;
         break;
       case 39:
       case 68:
-        if(this.direction != WEST) this.direction = EAST;
+        if(this.direction != WEST && !this.isGoing(WEST)) this.direction = EAST;
         break;
       case 40:
       case 83:
-        if(this.direction != NORTH) this.direction = SOUTH;
+        if(this.direction != NORTH && !this.isGoing(NORTH)) this.direction = SOUTH;
         break;
       case 37:
       case 65:
-        if(this.direction != EAST) this.direction = WEST;
+        if(this.direction != EAST && !this.isGoing(EAST)) this.direction = WEST;
         break;
-      }
     }
+  }
 
   /* Moves snake in a given direction */
   this.move = function() {
@@ -175,10 +196,14 @@ function gameOver() {
 function loop(newTime) {
   var elapsedTime = newTime - oldTime;
   oldTime = newTime;
+  runtime += elapsedTime;
 
   try {
-    update(elapsedTime);
-    render(elapsedTime);
+    if (runtime > MIN_TIME) {
+      update(elapsedTime);
+      render(elapsedTime);
+      runtime = 0;
+    }
   } catch(e) {
     gameOver();
     return;

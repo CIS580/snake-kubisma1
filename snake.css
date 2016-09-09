@@ -39,3 +39,8 @@ p#final-score {
   font-weight: bold;
   margin: 1em;
 }
+
+p#instructions{
+  width:40em;
+  margin: auto;
+}
